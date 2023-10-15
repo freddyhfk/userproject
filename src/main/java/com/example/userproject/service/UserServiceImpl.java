@@ -2,7 +2,6 @@ package com.example.userproject.service;
 
 import com.example.userproject.entity.User;
 import com.example.userproject.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.IteratorUtils;
 import org.springframework.stereotype.Service;
@@ -18,6 +17,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user) {
+        boolean userExists = userRepository.findById(user.getId()).isPresent();
+        if (userExists) {
+            return null;
+        }
         return userRepository.save(user);
     }
 
@@ -38,8 +41,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user, Long id) throws EntityNotFoundException {
-
+    public void updateUser(User user, Long id) {
          userRepository
                 .findById(user.getId())
                 .ifPresent(dbUser -> {

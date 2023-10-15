@@ -45,7 +45,9 @@ public class UserController {
     @PostMapping("/user")
     public ResponseEntity<Object> saveUser(@RequestBody User user) {
         User savedUser = userService.saveUser(user);
-
+        if (savedUser == null) {
+            return ResponseEntity.status(409).build();
+        }
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(savedUser.getId()).toUri();
 
