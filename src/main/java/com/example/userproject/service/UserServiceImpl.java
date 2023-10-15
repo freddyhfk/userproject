@@ -3,14 +3,15 @@ package com.example.userproject.service;
 import com.example.userproject.entity.User;
 import com.example.userproject.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.IteratorUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -26,27 +27,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(User user, Long id) throws EntityNotFoundException {
+    public List<User> getAllUsers() {
+        return IteratorUtils.toList(userRepository.findAll().iterator());
+    }
 
-        if (userRepository.existsById(id)) {
-            User userDb = userRepository.findById(id).get();
+    @Override
+    public User getUserById(Long id) {
+        Optional<User> userDb = userRepository.findById(id);
+        return userDb.orElse(null);
+    }
 
-            if (Objects.nonNull(user.getName()) && !"".equalsIgnoreCase(user.getName())) {
-                userDb.setName(user.getName());
-            }
+    @Override
+    public void updateUser(User user, Long id) throws EntityNotFoundException {
 
-            if (Objects.nonNull(user.getSurname()) && !"".equalsIgnoreCase(user.getSurname())) {
-                userDb.setSurname(user.getSurname());
-            }
+         userRepository
+                .findById(user.getId())
+                .ifPresent(dbUser -> {
+                    dbUser.setName(user.getName());
+                    dbUser.setSurname(user.getSurname());
+                    dbUser.setEmail(user.getEmail());
 
-            if (Objects.nonNull(user.getEmail()) && !"".equalsIgnoreCase(user.getEmail())) {
-                userDb.setEmail(user.getEmail());
-            }
-
-            return userRepository.save(userDb);
-        } else {
-            throw new EntityNotFoundException("User was not found");
-        }
+                    userRepository.save(dbUser);
+                });
     }
 
     @Override
