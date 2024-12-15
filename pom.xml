@@ -13,9 +13,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>user-project</name>
 	<description>user-project</description>
-	<dependencyManagement>
-
-	</dependencyManagement>
 	<properties>
 		<java.version>21</java.version>
 		<commons-collections.version>4.2</commons-collections.version>
