@@ -1,7 +1,8 @@
-package com.example.userproject.controller;
+package freddyhfk.userproject.rest;
 
-import com.example.userproject.entity.User;
-import com.example.userproject.service.UserServiceImpl;
+import freddyhfk.userproject.entity.User;
+import freddyhfk.userproject.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +14,10 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api")
+@Tag(name = "some")
 public class UserController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
